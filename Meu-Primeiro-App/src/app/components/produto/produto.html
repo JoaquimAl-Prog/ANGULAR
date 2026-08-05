@@ -1,4 +1,5 @@
 <div class="Produto">
-    <h2>{{ nome }}</h2>
-    <p>Preço: R$ {{ preco }}</p>
+  <h3>{{ nome }}</h3>
+  <p>{{ preco | currency: 'BRL' }}</p>
+  <button (click)="selecionarProduto()">Selecionar {{ nome }}</button>
 </div>
