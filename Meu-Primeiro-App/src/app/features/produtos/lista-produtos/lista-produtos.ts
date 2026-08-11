@@ -13,11 +13,11 @@ export class ListaProdutos {
       console.log('Lista de produtos alterada:', this.produtos());
     });
     effect(() => {
-      console.log('Valor total atualizado:', this.totalProdutos());
+      console.log('Valor total atualizado:', this.valorTotal());
     });
     effect(() => {
       if (typeof document !== 'undefined') {
-        document.title = '(${this.totalProdutos()}) Minha Loja';
+        document.title = `(${this.totalProdutos()}) Minha Loja`;
       }
     });
   }
@@ -32,7 +32,7 @@ export class ListaProdutos {
   totalProdutos = computed(() => this.produtos().length);
 
   valorTotal = computed(() => {
-    return this.produtos().reduce((total, produto) => total + produto.preco, 0);
+    return this.produtos().reduce((total, item) => total + item.preco, 0);
   });
 
   carrinho = signal<{ nome: string; preco: number }[]>([]);
@@ -52,7 +52,7 @@ export class ListaProdutos {
   }
 
   substituirProdutos() {
-    this.produtos.set([{ nome: 'Produto novo', preco: 999 }]);
+    this.produtos.set([{ nome: 'Produtonovo', preco: 999 }]);
   }
 
   adicionarAoCarrinho(produto: { nome: string; preco: number }) {
