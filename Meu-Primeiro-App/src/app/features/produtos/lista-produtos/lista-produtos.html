@@ -17,12 +17,16 @@
     <p>Total de produtos: {{ totalProdutos() }}</p>
     <hr />
 
-    @for (item of produtos(); track $index) {
-      <app-produto [nome]="item.nome" [preco]="item.preco"
-        (produtoSelecionado)="exibirProduto($event)"
-        (produtoAdicionado)="adicionarAoCarrinho($event)"
+    <section class="grid-produtos">
+      @for (item of produtos(); track $index) {
+        <app-produto
+          [nome]="item.nome"
+          [preco]="item.preco"
+          (produtoSelecionado)="exibirProduto($event)"
+          (produtoAdicionado)="adicionarAoCarrinho($event)"
         />
-    }
+      }
+    </section>
   }
   <h2>
     Produto selecionado:
@@ -35,13 +39,13 @@
   </h2>
   <p>
     <button mat-raised-button color="primary" (click)="adicionarProduto()">
-    Adicionar Produto
-  </button>
+      Adicionar Produto
+    </button>
   </p>
 
   <p>
     <button mat-raised-button color="accent" (click)="substituirProdutos()">
-     Substituir Lista
+      Substituir Lista
     </button>
   </p>
 
