@@ -1,53 +1,45 @@
-import { Component, signal, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { ProdutosService } from '../../../core/services/produtos.service';
+
 import { CarrinhoFacade } from '../../../core/facades/carrinho.facade';
 import { ItemCarrinho } from '../../../core/models/item.carrinho';
+import { ProdutoLoja } from '../../../core/models/produto-loja';
+import { ProdutosService } from '../../../core/services/produtos.service';
 import { Produto } from '../produto/produto';
 
 @Component({
   selector: 'app-lista-produtos',
-  imports: [Produto, MatButtonModule],
+  imports: [ Produto, MatButtonModule, RouterLink ],
   templateUrl: './lista-produtos.html',
   styleUrl: './lista-produtos.css',
 })
 export class ListaProdutos {
-  // INJECTS
-  produtosService = inject(ProdutosService);
+  // Componente limpo para representar apenas a tela de catálogo.
+  private produtosService = inject(ProdutosService);
   carrinhoFacade = inject(CarrinhoFacade);
 
-
-  // === SIGNALS
-  produtos = signal<{ nome: string; preco: number }[]>([]);
+  produtos = signal<ProdutoLoja[]>([]);
   produtoSelecionado = signal<string | null>(null);
   carregando = signal(true);
   erro = signal<string | null>(null);
 
-  // === COMPUTED
   totalProdutos = computed(() => this.produtos().length);
 
-  valorTotal = computed(() => {
-    return this.produtos().reduce((total, item) => total + item.preco, 0);
-  });
+  valorTotal = computed(() => this.produtos().reduce((total, item) => total + item.preco, 0));
 
-  // === CONSTRUTOR
+  valorTotalFormatado = computed(() => this.valorTotal().toFixed(2));
+
   constructor() {
     this.carregarProdutos();
 
-    effect(() => {
-      console.log('Lista de produtos alterada:', this.produtos());
-    });
-    effect(() => {
-      console.log('Valor total atualizado:', this.valorTotal());
-    });
+    // Mantém apenas um efeito útil para a experiência do usuário.
     effect(() => {
       if (typeof document !== 'undefined') {
         document.title = `(${this.totalProdutos()}) Minha Loja`;
       }
     });
   }
-
-  // === MÉTODO HTTP (API)
   carregarProdutos() {
     this.erro.set(null);
     this.carregando.set(true);
@@ -66,19 +58,9 @@ export class ListaProdutos {
     });
   }
 
-  // === DEMAIS MÉTODOS
   exibirProduto(nome: string) {
     this.produtoSelecionado.set(nome);
   }
-
-  adicionarProduto() {
-    this.produtos.update((listaAtual) => [...listaAtual, { nome: 'Teclado', preco: 250 }]);
-  }
-
-  substituirProdutos() {
-    this.produtos.set([{ nome: 'Produto novo', preco: 999 }]);
-  }
-
   adicionarAoCarrinho(produto: ItemCarrinho) {
     this.carrinhoFacade.adicionarProduto(produto);
   }
