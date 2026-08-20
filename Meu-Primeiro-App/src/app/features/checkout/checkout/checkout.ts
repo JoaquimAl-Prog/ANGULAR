@@ -8,6 +8,8 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 
+import { RouterLink } from '@angular/router';
+
 import { CarrinhoFacade } from '../../../core/facades/carrinho.facade';
 
 function nomeSemNumeros(control: AbstractControl): ValidationErrors | null {
@@ -18,12 +20,13 @@ function nomeSemNumeros(control: AbstractControl): ValidationErrors | null {
   if (/\d/.test(valor)) {
     return { numeroInvalido: true };
   }
+
   return null;
 }
 
 @Component({
   selector: 'app-checkout',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
@@ -62,6 +65,7 @@ export class Checkout {
     console.log('Total da compra:', total);
 
     this.carrinhoFacade.limparCarrinho();
+    
     this.formulario.reset();
     this.compraFinalizada.set(true);
   }

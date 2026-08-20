@@ -2,6 +2,7 @@ import { Component, signal, computed, effect, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ProdutosService } from '../../../core/services/produtos.service';
 import { CarrinhoFacade } from '../../../core/facades/carrinho.facade';
+import { ItemCarrinho } from '../../../core/models/item.carrinho';
 import { Produto } from '../produto/produto';
 
 @Component({
@@ -15,8 +16,6 @@ export class ListaProdutos {
   produtosService = inject(ProdutosService);
   carrinhoFacade = inject(CarrinhoFacade);
 
-  quantidadeCarrinho = this.carrinhoFacade.quantidade;
-  totalCarrinho = this.carrinhoFacade.total;
 
   // === SIGNALS
   produtos = signal<{ nome: string; preco: number }[]>([]);
@@ -34,6 +33,7 @@ export class ListaProdutos {
   // === CONSTRUTOR
   constructor() {
     this.carregarProdutos();
+
     effect(() => {
       console.log('Lista de produtos alterada:', this.produtos());
     });
@@ -79,7 +79,7 @@ export class ListaProdutos {
     this.produtos.set([{ nome: 'Produto novo', preco: 999 }]);
   }
 
-  adicionarAoCarrinho(produto: { nome: string; preco: number }) {
+  adicionarAoCarrinho(produto: ItemCarrinho) {
     this.carrinhoFacade.adicionarProduto(produto);
   }
 }
